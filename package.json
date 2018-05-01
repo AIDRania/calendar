@@ -1,0 +1,22 @@
+{
+  "name": "calendar",
+  "version": "1.0.0",
+  "description": "NPM install:\r \tnpm init --> initialiser le projet\r \tnpm install restify restify-errors --save --> installer le framework restify pour les    \t\t\t\t\t\t\t\t\t\t\t\t  requetes GET et POST\r \tnpm install mysql --> installer le driver node pour mysql",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "calendar",
+    "events",
+    "date"
+  ],
+  "author": "rania leila",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.0.16"
+  }
+}
