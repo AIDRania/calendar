@@ -119,5 +119,7 @@ app.post('/deleteEvent', (req,res,next) => {
 
 
 
-app.listen(3001, () => console.log('app listening on port 3001'))
-
+//app.listen(3001, () => console.log('app listening on port 3001'))
+var listener = app.listen(process.env.PORT, function () {
+  console.log('Your app is listening on port ' + listener.address().port);
+});
