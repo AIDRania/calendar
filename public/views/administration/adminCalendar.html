@@ -1,0 +1,20 @@
+<div class="center"> 
+<h3>Calendar administration</h3>
+<form class="form-inline" ng-submit="getCalendarInfos(name)">
+    <label><b>Name </b></label>
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" ng-model='name'>
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    <button type="button" class="btn btn-success  my-2 my-sm-0" ng-click="createCalendar(name)">Create</button>
+</form>
+
+<div ng-if="showCalendarInfos">
+	<strong>Calendar name: </strong> <div ng-bind="data.name"></div>
+	<strong>Calendar owner: </strong><div ng-bind="data.owner"></div>
+	<strong>number of events: </strong><div ng-bind="data.nbEvents"></div>
+	<br/><br/>
+
+</div>
+
+<div id= "errorGetCalendarInfos" class="alert alert-danger"  ng-show="showError" ng-bind="errorMessage"></div>
+<div id= "succesCreateCalendar" class="alert alert-success"  ng-show="showSuccesCreate" ng-bind="succesMessagecreateCalendar"></div>
+</div>

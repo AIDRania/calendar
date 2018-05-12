@@ -1,0 +1,42 @@
+<div class="center"> 
+<h3>Profile administration</h3>
+<form class="form-inline" ng-submit="getProfile(email)">
+    <label><b>E-mail </b></label>
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" list="listEmails" ng-model='email' >
+
+    <datalist id="listEmails"  >
+          <option data-ng-repeat="item in search.users" ng-value="item.email" ></option>
+    </datalist>
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+<div ng-if="showProfil">
+	<strong>First name: </strong> <div ng-bind="userData.first_name"></div>
+	<strong>Last name: </strong><div ng-bind="userData.last_name"></div>
+	<strong>E-mail: </strong><div ng-bind="userData.email"></div>
+	<strong>Gender: </strong><div ng-bind="userData.gender"></div>
+	<strong>Country: </strong><div ng-bind="userData.country"></div>
+	<br/><br/>
+	<div class="container">
+  		<h3>Privileges</h3>
+  		<div class="row">
+    		<div class="col-sm-6" >
+    			<div ng-bind="right" class="btn btn-danger btn-block" ng-repeat="right in rights"  ng-click="removeRight(userData.email,right)" ></div>
+    			</div>
+    		<div class="col-sm-6" >
+    			<div ng-bind="right" class="btn btn-success btn-block" ng-repeat="right in allRights" ng-if="!rights.includes(right)" ng-click="assignRight(userData.email,right)" ></div>
+    			</div>
+    		</div>
+  		</div>
+	</div>
+
+
+<div id= "errorGetProfile" class="alert alert-danger"  ng-show="showError" ng-bind="errorMessageGetProfile"></div>
+</div>
+
+
+</div>
+
+
+
+ 

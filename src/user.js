@@ -1,7 +1,7 @@
 var  mongoose =require("mongoose")
+mongoose.connect('mongodb://localhost:27017/calendar', { autoIndex: true });
+//mongoose.connect('mongodb://raid:Aidrania1994@ds111390.mlab.com:11390/calendar', { autoIndex: true });
 
-//mongoose.connect('mongodb://localhost:27017/calendar', { autoIndex: true });
-mongoose.connect('mongodb://raid:Aidrania1994@ds111390.mlab.com:11390/calendar', { autoIndex: true });
 var userSchema = new mongoose.Schema({
 
 email:{type:String,
@@ -58,8 +58,8 @@ password:{
 	required: [true, 'User password is requited']},
 privileges:[{
 			type: String,
-			enum: ['CREATE', 'UPDATE', 'DELETE', 'AMIN']
-			} ],
+			enum: ['CREATION','MODIFICATION','DELETION','ADMINISTRATION'],
+			}],
 });
 
 
@@ -78,7 +78,8 @@ User.prototype.login = function(callback){
 			if (err) return handleError(err);
 	  		if(userFinded){
 	  			response.isExists = true;
-	  			response.user = userFinded.email;
+	  			response.user = {}
+	  			response.user.email = userFinded.email;
 	  			response.message = 'you are loged in';
 	  		}else response.message = 'The e-mail or password you\'ve entered is incorrect';
 	  		callback(response);
@@ -90,25 +91,112 @@ User.prototype.login = function(callback){
 }
 
 
-
-User.prototype.getInfos = function(email,callback){
+User.prototype.getPassword = function(callback){
 	var response = {isExists: false,user: null,message:''};
-	
+	const email = this.data.email;
+	console.log(email);
 	if(email != null){
-		UserModel.findOne({'email': email},function(err, userFinded){
-			if (err) return handleError(err);
-	  		if(userFinded){
+		UserModel.findOne({email: email},function(err, userFinded){
+			if(err)
+				for(var e in  err.errors)
+				response.message += error.errors[e].message + ', ';
+	  		else if(userFinded){
 	  			response.isExists = true;
-	  			userFinded.password = null; //not show password
-	  			response.user = userFinded;
-	  			response.message = 'your information';
-	  		}else response.message = 'The e-mail you\'ve entered is incorrect';
+	  			response.user = {}
+	  			response.user.email = userFinded.email;
+	  			response.user.password = userFinded.password;			
+	  			response.message = 'password finded';
+	  		}else response.message = 'The e-mail you\'ve entered does not exists';
 	  		callback(response);
 		});
 	}else{
-		response.message = 'you must fill in all the fields';
+		response.message = 'you must fill in the email field';
 		callback(response);
 	}
+}
+
+
+User.prototype.getProfile = function(callback){
+	var response = {isExists: false,user: null,message:''};
+	const email = this.data.email;
+
+	UserModel.findOne({email: email},{password: 0},function(err, userFinded){
+		if(err)
+			for(var e in  err.errors)
+				response.message += error.errors[e].message + ', ';
+  		else {
+  			if(userFinded){
+  			response.isExists = true;
+  			//userFinded.password = null; //not show password
+  			response.user = userFinded;
+  			response.message = 'Informations of profile';
+  			}
+  			else response.message = 'The e-mail you\'ve entered is incorrect';
+  		}
+  		callback(response);
+	});
+}
+
+
+User.prototype.getEmails = function(callback){
+	var response = {isExists: false,emails: null,message:''};
+	const email = this.data.email;
+
+	UserModel.find({email: {$regex: email, $options: 'i'}},{email: 1,_id:0},{limit: 5},function(err, usersFinded){
+		console.log("ICI");
+		console.log(usersFinded);
+		if(err)
+			for(var e in  err.errors)
+				response.message += error.errors[e].message + ', ';
+  		else {
+  			if(usersFinded){
+  			response.isExists = true;
+  			//userFinded.password = null; //not show password
+  			response.emails = usersFinded;
+  			response.message = 'Liste of emails';
+  			}
+  			else response.message = 'The e-mail you\'ve entered is incorrect';
+  		}
+  		callback(response);
+	});
+}
+
+
+User.prototype.getMyRights = function(callback){
+	var response = {isExists: false,rights: null,message:''};
+	const email = this.data.email;
+
+	UserModel.findOne({email: email},{privileges: 1},function(err, userFinded){
+		if(err)
+			for(var e in  err.errors)
+				response.message += error.errors[e].message + ', ';
+  		else {
+  			if(userFinded){
+  			response.isExists = true;
+  			response.rights = userFinded.privileges;
+  			response.message = 'Informations of rights';
+  			}
+  			else response.message = 'Your e-mail doesn\'t exists';
+  		}
+  		callback(response);
+	});
+}
+
+
+User.prototype.haveRight = function(right,callback){
+	
+
+	UserModel.findOne({email: this.data.email},{privileges: 1},function(err, userFinded){
+		if(err)
+			callback(false);
+  		else {
+  			if(userFinded){
+  			
+  			callback(userFinded.privileges.includes(right));
+  			}
+  			else callback(false);
+  		}
+	});
 }
 
 
@@ -117,24 +205,18 @@ User.prototype.create = function(callback){
 	var response = {creation: false, message:''};
 	userModel.validate(function(error){
 			
-			console.log("VALIDATE START");
-			if(!error){
-				console.log("NO ERROR VAIDATE");
+			if(!error){	
 				userModel.save(function(err, savedUser){
-					if(err){
-						console.log("SAVE ERROR");
+					if(err){			
 						response.creation = false;
 						response.message = 'Error during creation in data base';
-
-					}else{
-						console.log("NO SAVE ERROR");
+					}else{		
 						response.creation = true;
 						response.message = 'your account has been seccessfully created';
 					}
 				callback(response);
 				});
-			}else{ 
-				console.log("ERROR VALIDATE");
+			}else{ 	
 				//response.creation = false;
 				for(var e in  error.errors)response.message += error.errors[e].message + ', ';
 				callback(response);
@@ -143,6 +225,61 @@ User.prototype.create = function(callback){
 
 }
 
+User.prototype.assignRights = function(callback){
+	var response = {assign: false, message: ""};
+	const email = this.data.email;
+	var rights = this.data.rights;
+	if(rights.includes('ADMINISTRATION')){
+		rights = rights.concat(['CREATION','MODIFICATION','DELETION','ADMINISTRATION']);
+	}
+	UserModel.findOneAndUpdate(
+		{email: email},
+		{$addToSet: {privileges: {$each: rights}}},
+		{runValidators: true},
+		function(error,userFinded){
+			
+			if(!error){
+				if(userFinded){
+					response.assign = true;
+					response.message = 'The rights has been seccessfully added';
+				}
+				else
+					response.message = 'The user does not exist';				
+			}
+			else
+				for(var e in  error.errors)response.message += error.errors[e].message + ', ';
+			callback(response);
+		}
+
+	);
+}
+
+User.prototype.removeRights = function(callback){
+	var response = {remove: false, message: ""};
+	const email = this.data.email;
+	var rights = this.data.rights;
+	rights.push('ADMINISTRATION'); // if you remove any right ==> he can't keep administration right
+	UserModel.findOneAndUpdate(
+		{email: email},
+		{$pull: {privileges: {$in: rights}}},
+		{runValidators: true},
+		function(error,userFinded){
+			console.log(error);
+			if(!error){
+				if(userFinded){
+					response.remove = true;
+					response.message = 'The rights has been seccessfully removed';
+				}
+				else
+					response.message = 'The user does not exist';				
+			}
+			else
+				for(var e in  error.errors)response.message += error.errors[e].message + ', ';
+			callback(response);
+		}
+
+	);
+}
 
 
 

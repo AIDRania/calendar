@@ -1,0 +1,11 @@
+#parent {
+    text-align:center;
+}
+.center {
+    display:inline-block;
+
+}
+
+.checkbox-rounded [type="checkbox"][class*='filled-in']+label:after {
+    border-radius: 50%;
+}
