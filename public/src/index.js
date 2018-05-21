@@ -29,11 +29,13 @@ function notifyMe(message) {
 }
 var localhost = false;
 
+console.log(location.origin.replace(/^http/, 'ws'));
+
 var socket;
 if(localhost)
   socket = io.connect("http://localhost:3001");
 else
-  socket = io.connect("https://calendars14.herokuapp.com:"+process.env.PORT);
+  socket = io.connect("https://calendars14.herokuapp.com");
 socket.on('Calendar',function(data){
   if(data.name == CALENDAR_NAME){
       if(data.action == 'EVENT_CREATE')notifyMe("New event has added");
