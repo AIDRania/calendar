@@ -6,8 +6,12 @@ var socket = require('socket.io');
 var  mongoose =require("mongoose");
 var app = express();
 
-//mongoose.connect('mongodb://localhost:27017/calendar', { autoIndex: true });
-mongoose.connect('mongodb://raid:Aidrania1994@ds111390.mlab.com:11390/calendar', { autoIndex: true });
+var localhost = false;
+
+if(localhost)
+	mongoose.connect('mongodb://localhost:27017/calendar', { autoIndex: true });
+else
+	mongoose.connect('mongodb://raid:Aidrania1994@ds111390.mlab.com:11390/calendar', { autoIndex: true });
 
 var User = require('./src/user.js');
 var Calendar = require('./src/calendar.js');
@@ -24,10 +28,14 @@ app.use(session({
 
 
 
-//var server = app.listen(3001, () => console.log('app listening on port 3001'))
-var server = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + server.address().port);
-});
+var server;
+
+if(localhost)
+	server =  app.listen(3001, () => console.log('app listening on port 3001'))
+else
+	server = app.listen(process.env.PORT, function () {
+	  console.log('Your app is listening on port ' + server.address().port);
+	});
 
 var io = socket(server);
 

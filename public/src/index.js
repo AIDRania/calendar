@@ -27,10 +27,13 @@ function notifyMe(message) {
   // Finally, if the user has denied notifications and you 
   // want to be respectful there is no need to bother them any more.
 }
+var localhost = false;
 
-
-
-var socket = io.connect("https://calendars14.herokuapp.com/:3000");
+var socket;
+if(localhost)
+  socket = io.connect("http://localhost:3001");
+else
+  socket = io.connect("https://calendars14.herokuapp.com:3000");
 socket.on('Calendar',function(data){
   if(data.name == CALENDAR_NAME){
       if(data.action == 'EVENT_CREATE')notifyMe("New event has added");
@@ -71,7 +74,7 @@ function showCalendar(name,isConnected){
      selectable: isConnected,
      selectHelper: isConnected,
      editable: isConnected,
-     contentHeight: 480,
+    
      events: function(start, end, timezone, callback){
 
         const startDate = moment(start).format('YYYY-MM-DDTHH:mm');
@@ -83,12 +86,14 @@ function showCalendar(name,isConnected){
           $scope.showCalendar = false;
           if(res.exists){
               $scope.showCalendar = true;
+              $scope.$apply();
               callback(res.data.events);
           }else{
               $('#calendar').fullCalendar('destroy');
               $scope.errorMessage = res.message;
+              $scope.$apply();
           }
-          $scope.$apply();
+          
         });
      },
      eventRender: function(event, element) {
