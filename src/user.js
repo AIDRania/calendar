@@ -1,6 +1,4 @@
 var  mongoose =require("mongoose")
-mongoose.connect('mongodb://localhost:27017/calendar', { autoIndex: true });
-//mongoose.connect('mongodb://raid:Aidrania1994@ds111390.mlab.com:11390/calendar', { autoIndex: true });
 
 var userSchema = new mongoose.Schema({
 
@@ -32,6 +30,7 @@ email:{type:String,
 	,
 	required: [true, 'User email adress required']
 },
+photoPath:{type:String},
 last_name:{type:String},
 first_name:{type:String},
 gender:{type:String},
@@ -142,16 +141,14 @@ User.prototype.getEmails = function(callback){
 	var response = {isExists: false,emails: null,message:''};
 	const email = this.data.email;
 
-	UserModel.find({email: {$regex: email, $options: 'i'}},{email: 1,_id:0},{limit: 5},function(err, usersFinded){
-		console.log("ICI");
-		console.log(usersFinded);
+	UserModel.find({email: {$regex: email, $options: 'i'}},{email: 1,photoPath:1,_id:0},{limit: 5},function(err, usersFinded){
+		
 		if(err)
 			for(var e in  err.errors)
 				response.message += error.errors[e].message + ', ';
   		else {
   			if(usersFinded){
   			response.isExists = true;
-  			//userFinded.password = null; //not show password
   			response.emails = usersFinded;
   			response.message = 'Liste of emails';
   			}
@@ -163,9 +160,9 @@ User.prototype.getEmails = function(callback){
 
 
 User.prototype.getMyRights = function(callback){
-	var response = {isExists: false,rights: null,message:''};
+	
 	const email = this.data.email;
-
+	var response = {isExists: false,email: email,rights: null,message:''};
 	UserModel.findOne({email: email},{privileges: 1},function(err, userFinded){
 		if(err)
 			for(var e in  err.errors)
@@ -210,7 +207,8 @@ User.prototype.create = function(callback){
 					if(err){			
 						response.creation = false;
 						response.message = 'Error during creation in data base';
-					}else{		
+					}else{
+
 						response.creation = true;
 						response.message = 'your account has been seccessfully created';
 					}

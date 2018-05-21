@@ -1,14 +1,35 @@
-<div class="center"> 
-<form class="form-inline" ng-submit="getCalendar(calendar_name)">
-    <label><b>Name </b></label>
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" ng-model='calendar_name'>
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-</form>
-<div id= "errorGetCalendar" class="alert alert-danger" ng-bind="errorMessage" ng-show="errorMessage != ''"></div>
-</div>    
+<div class="row">
+<div class="column col-md-3" >
+    <div class="row">
+    <div class="col-md-12" >
+      <div class="row">
+        <div class="col-md-3">
+          <h4> Name: </h4>
+        </div>
+        <div class="col-md-9">
+          <input class=" form-control" type="shearc" placeholder="Search" aria-label="Search" ng-model='name' >
+       </div>
+    </div>
+    </div>
 
-<div id="calendar"></div>
-<!-- initialize modal -->
+    <div class="col-md-12 calendars_list shadow">
+            <h4>Calendars : </h4>
+            <hr>
+        <span class="chip col-md-12" data-ng-repeat="item in search.names" ng-click="getCalendar(item.name)"><b>{{item.name}}</b ></span>            
+    </div>
+  </div>
+</div>
+
+
+
+<div  id="calendarContainer" class="column col-md-9 "  >
+
+    <div id="calendar" class="shadow" ng-show="showCalendar"></div>
+    <div id= "errorGetCalendar" class="alert alert-danger" ng-bind="errorMessage" ng-show="errorMessage != ''"></div>
+</div>
+
+
+
 
 
 <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
@@ -32,32 +53,32 @@
           </div>
            <div class="form-group">
             <label for="start-date" class="col-form-label">Start:</label>
-				 <div class="input-group"
-				     moment-picker="event_form.start"
-				     format="YYYY-MM-DDTHH:mm">
-				  
-				    <input class="form-control"
-				           placeholder="Select a time"
-				           ng-model="event_form.start"
-				           id="startDateModel"
-				           >
-				</div>
+         <div class="input-group"
+             moment-picker="event_form.start"
+             format="YYYY-MM-DDTHH:mm">
+          
+            <input class="form-control"
+                   placeholder="Select a time"
+                   ng-model="event_form.start"
+                   id="startDateModel"
+                   >
+        </div>
           </div>
           <div class="form-group">
             <label for="end-date" class="col-form-label">End:</label>
             <div class="input-group"
-				     moment-picker="event_form.end"
-				     format="YYYY-MM-DDTHH:mm">
-				  
-				    <input class="form-control"
-				           placeholder="Select a time"
-				           ng-model="event_form.end"
-				           id="endDateModel"
-				           >
-				</div>
+             moment-picker="event_form.end"
+             format="YYYY-MM-DDTHH:mm">
+          
+            <input class="form-control"
+                   placeholder="Select a time"
+                   ng-model="event_form.end"
+                   id="endDateModel"
+                   >
+        </div>
           </div>
           
-		  <div class="form-group">
+      <div class="form-group">
             <label for="colorEvent" class="col-form-label">Color:</label>
             <div color-picker ng-model="event_form.color"></div>
           </div>
@@ -76,3 +97,6 @@
   </div>
 </div>
 
+
+
+</div>

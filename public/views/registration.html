@@ -1,60 +1,69 @@
-<div class="container center" >
+<div class="col-md-offset-2 col-md-8" >
         <div class="row centered-form center">
-        <div class="center">
-        	<div class="panel panel-default">
+        
+        	<div class="panel panel-default shadow">
         		<div class="panel-heading">
-			    		<h3 class="panel-title">Registration</small></h3>
-			 			</div>
-			 			<div class="panel-body">
-			    		<form role="form" name="registrationForm" ng-submit="submitRegistrationForm(registration_form)">
-			    			<div class="row">
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			                <input type="text" name="first_name" id="first_name" class="form-control input-sm" placeholder="First Name" ng-model="registration_form.first_name">
-			    					</div>
-			    				</div>
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    						<input type="text" name="last_name" id="last_name" class="form-control input-sm" placeholder="Last Name" ng-model="registration_form.last_name">
-			    					</div>
-			    				</div>
-			    			</div>
+			    	<h3 class="panel-title">Registration</h3>
+			 	</div>
+		 			<div class="panel-body">
+		    		<form role="form" name="registrationForm" ng-submit="submitRegistrationForm(registration_form)">
+		    			<div class="row">
+		    				 <div flow-init
+						       flow-name="uploader.flow"
+						       flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1,csv:1}"
+    						   flow-files-added="processFiles($files)">
+      						   <img flow-btn type="file" flow-attrs="{accept:'image/*'}"  class="thumbnail col-md-offset-4 col-md-4 " ng-src="{{registration_form.photoProfile}}" alt="Image">	</div> 
+		    			</div>
 
-			    			<div class="form-group">
-			    				<input type="email" name="email" id="email" class="form-control input-sm" placeholder="Email Address" ng-model="registration_form.email" required>
-			    			</div>
+		    			<div class="row">
+		    				<div class="col-xs-6 col-sm-6 col-md-6">
+		    					<div class="form-group">
+		                			<input type="text" name="first_name" id="first_name" class="form-control input-sm" placeholder="First Name" ng-model="registration_form.first_name">
+		    					</div>
+		    				</div>
+		    				<div class="col-xs-6 col-sm-6 col-md-6">
+		    					<div class="form-group">
+		    						<input type="text" name="last_name" id="last_name" class="form-control input-sm" placeholder="Last Name" ng-model="registration_form.last_name">
+		    					</div>
+		    				</div>
+		    			</div>
 
-			    			<div class="row">
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    						<input type="password" name="password" id="password" class="form-control input-sm" placeholder="Password" ng-model="registration_form.password"  required>
-			    					</div>
-			    				</div>
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    						<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-sm" placeholder="Confirm Password" ng-model="registration_form.password_confirmation" required>
+		    			<div class="form-group">
+		    				<input type="email" name="email" id="email" class="form-control input-sm" placeholder="Email Address" ng-model="registration_form.email" required>
+		    			</div>
 
-			    					</div>
-			    				</div>
-			    			</div>
-							<div class="form-group">
-			    				<input type="text" name="country" id="country" class="form-control input-sm" placeholder="Country" ng-model="registration_form.country">
-			    			</div>
-			    			<div class="form-group">
-			    				<input type="date" name="birth_day_date" id="birth_day_date" class="form-control input-sm" ng-model="registration_form.birth_day_date">
-			    			</div>
-			    			<div class="form-group">
-			    				<select name="gender" id="gender" class="form-control input-sm" ng-model="registration_form.gender">
-			    				 	<option value="male">Male</option>
-    								<option value="female">Female</option>
-    							</select>
-			    			</div>
-			    			
-			    			<input type="submit" value="Register" class="btn btn-info btn-block" >
-			    		
-			    		</form>
+		    			<div class="row">
+		    				<div class="col-xs-6 col-sm-6 col-md-6">
+		    					<div class="form-group">
+		    						<input type="password" name="password" id="password" class="form-control input-sm" placeholder="Password" ng-model="registration_form.password"  required>
+		    					</div>
+		    				</div>
+		    				<div class="col-xs-6 col-sm-6 col-md-6">
+		    					<div class="form-group">
+		    						<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-sm" placeholder="Confirm Password" ng-model="registration_form.password_confirmation" required>
+
+		    					</div>
+		    				</div>
+		    			</div>
+						<div class="form-group">
+		    				<input type="text" name="country" id="country" class="form-control input-sm" placeholder="Country" ng-model="registration_form.country">
+		    			</div>
+		    			<div class="form-group">
+		    				<input type="date" name="birth_day_date" id="birth_day_date" class="form-control input-sm" ng-model="registration_form.birth_day_date">
+		    			</div>
+		    			<div class="form-group">
+		    				<select name="gender" id="gender" class="form-control input-sm" ng-model="registration_form.gender" ng-change="updateGebnder(registration_form.gender)">
+		    				 	<option value="male" >Male</option>
+								<option value="female" selected>Female</option>
+							</select>
+		    			</div>
+		    			
+		    			<input type="submit" value="Register" class="btn btn-info btn-block" >
+		    		
+		    		</form>
 			    	</div>
 	    		</div>
-    		</div>
     	</div>
+    	<div id= "errorRegistration" class="alert alert-danger"  ng-show="showError" ng-bind="errorMessageRegistration"></div>
+    	<div id= "errorRegistration" class="alert alert-success"  ng-show="showSucces" ng-bind="succesMessageRegistration"></div>
     </div>

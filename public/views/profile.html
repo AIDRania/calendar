@@ -1,4 +1,39 @@
-<div class="center">
-<button class="btn btn-danger" ng-click="logout()">Log Out</button>
 
+  <div class="row">
+    <div class="col-md-offset-4 col-md-4">
+      <img class="thumbnail" src="{{userData.photoPath}}" alt="User">
+    </div>
+  </div>
+  <div class="row">
+	  <strong class="col-md-3">First name: </strong>
+    <div class="col-md-9" ng-bind="userData.first_name"></div>
+  </div>
+	<div class="row">
+    <strong class="col-md-3">Last name: </strong>
+    <div class="col-md-9" ng-bind="userData.last_name"></div>
+  </div>
+	<div class="row">
+    <strong class="col-md-3">E-mail: </strong>
+    <div class="col-md-9" ng-bind="userData.email"></div>
+  </div>
+	<div class="row">
+    <strong class="col-md-3">Gender: </strong>
+    <div class="col-md-9" ng-bind="userData.gender"></div>
+  </div>
+	<div class="row">
+    <strong class="col-md-3">Country: </strong>
+    <div class="col-md-9" ng-bind="userData.country"></div>
+  </div>
+<h3>Privileges :</h3>
+
+<div class="row">
+	<div class="col-md-5 alert-info" ng-repeat="right in userData.privileges" >
+		<div class="row">
+	        <div class="col-md-10">
+	          <h5>{{right}}</h5>
+	        </div>
+	    </div>
+    </div>
 </div>
+
+<button class="btn btn-danger" ng-click="logout()">Log Out</button>

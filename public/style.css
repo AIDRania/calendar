@@ -1,11 +1,72 @@
-#parent {
-    text-align:center;
-}
-.center {
-    display:inline-block;
-
+@keyframes changeOpacity {
+  from { opacity: 0}
+  to   { opacity: 1}
 }
 
-.checkbox-rounded [type="checkbox"][class*='filled-in']+label:after {
-    border-radius: 50%;
+
+hr{
+	size: 10;
+	color: red;
+}
+
+
+#path{
+	background: #7386D5;
+	border-top-right-radius: 50%;
+	border-bottom-right-radius: 50%;
+	cursor: pointer;
+	color: #fff;
+	animation: 2s  changeOpacity;
+}
+
+#path:hover{
+    color: black;
+    transition: all 1s;
+
+}
+.thumbnail{
+	border-radius: 50%;
+	height: 200px;
+    width: 200px;
+}
+
+.emails_list, .calendars_list{
+	margin-top: 5%;
+	min-height: 60vh; 
+}
+
+
+.chip {
+	margin-top: 2%;
+    line-height: 42px;
+    border-radius: 21px;
+    text-overflow: ellipsis;
+    border-style:outset;
+    border-color: gray;
+    border-width: 2px;
+    background-color: #e0e0e0;
+    cursor: pointer;
+ 	animation: 2s  changeOpacity;
+}
+.chip:hover{
+	background: #7386D5;
+    color: #fff;
+    transition: all 1s;
+}
+
+.chip span {
+    margin-left: 5%;
+}
+.chip img {
+    height: 42px;
+    width: 42px;
+     border-radius: 50%;
+}
+
+
+.shadow {
+  -webkit-box-shadow: 3px 3px 5px 6px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+  -moz-box-shadow:    3px 3px 5px 6px #ccc;  /* Firefox 3.5 - 3.6 */
+  box-shadow:         3px 3px 5px 6px #ccc;  /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
+  animation: 2s  changeOpacity;
 }

@@ -1,7 +1,6 @@
 var  mongoose =require("mongoose");
 var  moment =require("moment");
-mongoose.connect('mongodb://localhost:27017/calendar', { autoIndex: true });
-//mongoose.connect('mongodb://raid:Aidrania1994@ds111390.mlab.com:11390/calendar', { autoIndex: true });
+
 var calendarSchema = new mongoose.Schema({
 
 name:{type:String,
@@ -9,7 +8,7 @@ name:{type:String,
 	validate: [{
 		// test syntax of email
 		validator: function(value){
-			if(value == "test") return false;
+			if(value == "") return false;
 			return true;
 		},
 		message: '{VALUE} is not a valid name calendar'
@@ -35,14 +34,7 @@ name:{type:String,
 owner:{type:String},
 events: [{
 
-	title: {type:String,
-			validate: {
-				validator: function(value){if(value == null || value == "") 
-												return false;
-											return true;},
-				message: 'Error in title of this event'
-			}
-	},
+	title: {type:String},
 	description: {type:String},
 	author: {type:String},
 	color: {type:String},
@@ -89,18 +81,47 @@ Calendar.prototype.create = function(data,callback){
 
 
 
+
+Calendar.prototype.delete = function(nameCalendar,callback){
+	
+	var response = {action: false, message:''};
+	CalendarModel.findOneAndRemove(
+			{
+				name: nameCalendar
+			},
+			function(error,eventFinded){
+				if(!error){
+					if(eventFinded){
+						response.action = true;
+						response.message = 'Your calendar has been seccessfully deleted';
+					}
+					else
+						response.message = 'The calendar does not exist';				
+				}
+				else{
+					for(var e in  error.errors)response.message += error.errors[e].message + ', ';
+				}
+				callback(response);
+			});
+}
+
+
+
+
+
+
 Calendar.prototype.addEvent = function(nameCalendar,dataEvent,callback){
 	
 	var response = {creation: false, message:''};
 	
 	// validate start and end date before add
-	var start = moment(dataEvent.start);
-	var end = moment(dataEvent.end);
-	if(!start.isValid())
+	var startDate = moment(dataEvent.start);
+	var endDate = moment(dataEvent.end);
+	if(!startDate.isValid())
 		response.message = "Start date is not valide";
-	else if(!end.isValid())
+	else if(!endDate.isValid())
 		response.message = "End date is not valide";
-	else if(start >= end)
+	else if(startDate >= endDate)
 		response.message = "Start date need to be less then End date";
 	else {
 
@@ -109,19 +130,19 @@ Calendar.prototype.addEvent = function(nameCalendar,dataEvent,callback){
 			events: {$elemMatch: {
 				$or: [
 					{$and: 
-						[{start: {$gte: start}},
-						 {end: {$lte: end}}]},
+						[{start: {$gte: startDate}},
+						 {end: {$lte: endDate}}]},
 					{$and:
-						[{start: {$lte: start}},
-						 {end: {$gte: end}}]},
+						[{start: {$lte: startDate}},
+						 {end: {$gte: endDate}}]},
 					{$and:
-						[{start: {$lte: start}},
-						 {end: {$lte: end}},
-						 {end: {$gte: start}}]},
+						[{start: {$lte: startDate}},
+						 {end: {$lte: endDate}},
+						 {end: {$gt: startDate}}]},
 					{$and:
-						[{start: {$gte: start}},
-						 {end: {$gte: end}},
-						 {start: {$lte: end}}]}
+						[{start: {$gte: startDate}},
+						 {end: {$gte: endDate}},
+						 {start: {$lt: endDate}}]}
 						 ]}
 				}
 		},function(error,find){
@@ -168,13 +189,13 @@ Calendar.prototype.updateEvent = function(nameCalendar,id_event,newData,callback
 	
 	var response = {action: false, message:''};
 
-	var start = moment(newData.start);
-	var end = moment(newData.end);
-	if(!start.isValid())
+	var startDate = moment(newData.start);
+	var endDate = moment(newData.end);
+	if(!startDate.isValid())
 		response.message = "Start date is not valide";
-	else if(!end.isValid())
+	else if(!endDate.isValid())
 		response.message = "End date is not valide";
-	else if(start >= end)
+	else if(startDate >= endDate)
 		response.message = "Start date need to be less then End date";
 	else {
 
@@ -185,34 +206,40 @@ Calendar.prototype.updateEvent = function(nameCalendar,id_event,newData,callback
 					_id: {$ne: id_event}},
 					{$or: [
 						{$and: 
-							[{start: {$gte: start}},
-							 {end: {$lte: end}}]},
+							[{start: {$gte: startDate}},
+							 {end: {$lte: endDate}}]},
 						{$and:
-							[{start: {$lte: start}},
-							 {end: {$gte: end}}]},
+							[{start: {$lte: startDate}},
+							 {end: {$gte: endDate}}]},
 						{$and:
-							[{start: {$lte: start}},
-							 {end: {$lte: end}},
-						 	 {end: {$gt: start}}]},
+							[{start: {$lte: startDate}},
+							 {end: {$lte: endDate}},
+						 	 {end: {$gt: startDate}}]},
 						{$and:
-							[{start: {$gte: start}},
-							 {end: {$gte: end}},
-							 {start: {$lt: end}}]}
+							[{start: {$gte: startDate}},
+							 {end: {$gte: endDate}},
+							 {start: {$lt: endDate}}]}
 							 ]}]
 				}}
 		},function(error,find){
 			console.log(find);
 			if(!find){		
-			console.log("EXIST");
+			console.log(newData);
 			CalendarModel.findOneAndUpdate(
 					{
 						name: nameCalendar,
-						events: {$elemMatch: {_id: id_event}} 
+						events: {$elemMatch: {_id: id_event,author: newData.author}} 
 					},
-					{$set: {"events.$": newData}},
+					{$set: {
+						"events.$.title": newData.title,
+							"events.$.description": newData.description,
+							"events.$.start": startDate,
+							"events.$.end": endDate,
+							"events.$.color": newData.color
+						}},
 					{runValidators: true},
 					function(error,eventFinded){
-						
+						console.log(eventFinded);
 						if(!error){	
 							if(eventFinded){
 								response.action = true;
@@ -243,19 +270,19 @@ Calendar.prototype.updateEvent = function(nameCalendar,id_event,newData,callback
 
 
 
-Calendar.prototype.deleteEvent = function(nameCalendar,id_event,callback){
+Calendar.prototype.deleteEvent = function(nameCalendar,id_event,author,callback){
 	
 	var response = {action: false, message:''};
-	
+	console.log(nameCalendar, id_event);
 	CalendarModel.findOneAndUpdate(
 			{
 				name: nameCalendar,
-				events: {$elemMatch: {_id: id_event}}
+				events: {$elemMatch: {_id: id_event,author: author}}
 			},
 			{$pull: {events: {_id: id_event}}},
 			{runValidators: true},
 			function(error,eventFinded){
-				
+				console.log("DELETE " + id_event);
 				if(!error){
 					
 					if(eventFinded){
@@ -306,7 +333,7 @@ Calendar.prototype.getCalendar = function(nameCalendar,start,end,callback){
 						response.message = 'here the data of the calendar';
 						//filter array of events with date range
 						calendarFinded.events = calendarFinded.events.filter(event =>
-								event.start >= startDate && event.end <= endDate);
+								event.end >= startDate && event.start <= endDate);
 						response.data = calendarFinded;
 					}
 					else
@@ -350,6 +377,32 @@ Calendar.prototype.getCalendarInfos = function(nameCalendar,callback){
 		);
 }
 
+
+
+
+Calendar.prototype.getCalendarsNames = function(name,callback){
+	
+	var response = {exists: false,names: null, message:''};
+
+	CalendarModel.find(
+			{name: {$regex: name, $options: 'i'}},
+			{name: 1},
+			function(error,calendars){
+				if(!error){
+					if(calendars){
+						response.exists = true;
+						response.message = 'here the list of calendars';
+						response.names = calendars;
+						}
+					else
+						response.message = 'no calendars';				
+				}
+				else
+					for(var e in  error.errors)response.message += error.errors[e].message + ', ';
+					callback(response);	
+			}
+		);
+}
 
 
 module.exports = Calendar;

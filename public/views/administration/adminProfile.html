@@ -1,42 +1,81 @@
-<div class="center"> 
-<h3>Profile administration</h3>
-<form class="form-inline" ng-submit="getProfile(email)">
-    <label><b>E-mail </b></label>
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" list="listEmails" ng-model='email' >
+<div class="row">
+<div class="column col-md-4" >
+    <div class="row">
+    <div class="col-md-12" >
+      <div class="row">
+        <div class="col-md-2">
+          <h4> Email: </h4>
+        </div>
+      <div class="col-md-10">
+        <input class=" form-control" type="shearc" placeholder="Search" aria-label="Search" ng-model='email' >
+      </div>
+    </div>
+    </div>
 
-    <datalist id="listEmails"  >
-          <option data-ng-repeat="item in search.users" ng-value="item.email" ></option>
-    </datalist>
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-</form>
+    <div class="col-md-12 emails_list shadow">
+            <h4>Users : </h4>
+            <hr>
+            <div class="chip" data-ng-repeat="item in search.users" ng-click="getProfile(item.email)" style=>
+              <img  ng-src="{{item.photoPath}}" alt="User" ><span class="col-md-auto"><b>{{item.email}}</b ></span>
+            </div>
+    </div>
+  </div>
+</div>
 
-<div ng-if="showProfil">
-	<strong>First name: </strong> <div ng-bind="userData.first_name"></div>
-	<strong>Last name: </strong><div ng-bind="userData.last_name"></div>
-	<strong>E-mail: </strong><div ng-bind="userData.email"></div>
-	<strong>Gender: </strong><div ng-bind="userData.gender"></div>
-	<strong>Country: </strong><div ng-bind="userData.country"></div>
-	<br/><br/>
-	<div class="container">
-  		<h3>Privileges</h3>
-  		<div class="row">
-    		<div class="col-sm-6" >
-    			<div ng-bind="right" class="btn btn-danger btn-block" ng-repeat="right in rights"  ng-click="removeRight(userData.email,right)" ></div>
-    			</div>
-    		<div class="col-sm-6" >
-    			<div ng-bind="right" class="btn btn-success btn-block" ng-repeat="right in allRights" ng-if="!rights.includes(right)" ng-click="assignRight(userData.email,right)" ></div>
-    			</div>
-    		</div>
-  		</div>
-	</div>
 
+
+<div  class="column col-md-offset-1 col-md-6 shadow" ng-if="showProfil" >
+
+  <div class="row">
+    <div class="col-md-offset-4 col-md-4">
+      <img class="thumbnail" ng-src="{{userData.photoPath}}" alt="User">
+    </div>
+  </div>
+  <div class="row">
+	  <strong class="col-md-3">First name: </strong>
+    <div class="col-md-9" ng-bind="userData.first_name"></div>
+  </div>
+	<div class="row">
+    <strong class="col-md-3">Last name: </strong>
+    <div class="col-md-9" ng-bind="userData.last_name"></div>
+  </div>
+	<div class="row">
+    <strong class="col-md-3">E-mail: </strong>
+    <div class="col-md-9" ng-bind="userData.email"></div>
+  </div>
+	<div class="row">
+    <strong class="col-md-3">Gender: </strong>
+    <div class="col-md-9" ng-bind="userData.gender"></div>
+  </div>
+	<div class="row">
+    <strong class="col-md-3">Country: </strong>
+    <div class="col-md-9" ng-bind="userData.country"></div>
+  </div>
+<h3>Privileges :</h3>
+
+<div class="row">
+		<div class="col-md-5 alert-info" ng-repeat="right in rights" >
+			<div class="row">
+        <div class="col-md-10">
+          <h5>{{right}}</h5>
+        </div>
+        <button class="btn btn-danger col-md-2"  ng-click="removeRight(userData.email,right)">
+        <span class="glyphicon glyphicon-remove-sign"></span>
+      </button>
+    </div>
+    </div>
+</div>
+
+<div class="row">
+  <div class="col-md-offset-2 col-md-5">
+  <select class="form-control" ng-model="rightToAdd">
+    <option ng-repeat="right in allRights" >{{right}}</option>
+  </select>
+  </div>
+  <button type="button" class="btn btn-success col-md-1" ng-click="assignRight(userData.email,rightToAdd)">Add</button>
+</div>
 
 <div id= "errorGetProfile" class="alert alert-danger"  ng-show="showError" ng-bind="errorMessageGetProfile"></div>
 </div>
 
-
 </div>
-
-
-
- 

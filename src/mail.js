@@ -1,10 +1,10 @@
 var nodemailer = require('nodemailer');
 
 var transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: 'eduroam.fr',
   auth: {
-    user: 'lounesfeniri',
-    pass: '#Lounes1993#'
+    user: 'rania.aid@ens.uvsq.fr',
+    pass: 'Aidrania1994'
   }
 });
 

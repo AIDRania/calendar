@@ -7,4 +7,10 @@ NPM install:
 
 
 
-name instance SQL: MySQL57
+
+
+
+
+sources: 
+	https://getbootstrap.com/
+	https://bootstrapious.com/p/bootstrap-sidebar 

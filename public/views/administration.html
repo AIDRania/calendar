@@ -1,32 +1,103 @@
-<div class="center"> 
-<form class="form-inline" ng-submit="getProfile(email)">
-    <label><b>E-mail </b></label>
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" ng-model='email'>
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-</form>
+<div class="row">
+<div class="column col-md-4" >
+    <div class="row">
+    <div class="col-md-12" >
+      <div class="row">
+        <div class="col-md-2">
+          <h4> Name: </h4>
+        </div>
+      <div class="col-md-10">
+        <input class=" form-control" type="shearc" placeholder="Search" aria-label="Search" ng-model='name' >
+      </div>
+    </div>
+    </div>
 
-<div ng-if="showProfil">
-	<strong>First name: </strong> <div ng-bind="userData.first_name"></div>
-	<strong>Last name: </strong><div ng-bind="userData.last_name"></div>
-	<strong>E-mail: </strong><div ng-bind="userData.email"></div>
-	<strong>Gender: </strong><div ng-bind="userData.gender"></div>
-	<strong>Country: </strong><div ng-bind="userData.country"></div>
-	<br/><br/>
-	<div class="container">
-  		<h3>Privileges</h3>
-  		<div class="row">
-    		<div class="col-sm-6" >
-    			<div ng-bind="right" class="btn btn-danger btn-block" ng-repeat="right in rights"  ng-click="removeRight(userData.email,right)" ></div>
-    			</div>
-    		<div class="col-sm-6" >
-    			<div ng-bind="right" class="btn btn-success btn-block" ng-repeat="right in allRights" ng-if="!rights.includes(right)" ng-click="assignRight(userData.email,right)" ></div>
-    			</div>
-    		</div>
-  		</div>
-	</div>
+    <div class="col-md-12 emails_list">
+            <h4>Calendars : </h4>
+            <div  data-ng-repeat="item in search.names" ng-click="getCalendar(item.name)" >
+              <span class="col-md-12" ng-click="getCalendar(item.name)"><b>{{item.name}}</b ></span>
+            </div>
+    </div>
+  </div>
 </div>
 
 
 
-<div id= "errorGetProfile" class="alert alert-danger"  ng-show="showError" ng-bind="errorMessageGetProfile"></div>
-</div> 
+<div  class="column col-md-8"  >
+
+    <div id="calendar"></div>
+    <div id= "errorGetCalendar" class="alert alert-danger" ng-bind="errorMessage" ng-show="errorMessage != ''"></div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eventModalLabel">New event</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-title" class="col-form-label">Title:</label>
+            <input type="text" class="form-control" id="recipient-title" ng-model='event_form.title'>
+          </div>
+          <div class="form-group">
+            <label for="description-text" class="col-form-label">Description:</label>
+            <textarea class="form-control" id="description-text" ng-model='event_form.description'></textarea>
+          </div>
+           <div class="form-group">
+            <label for="start-date" class="col-form-label">Start:</label>
+         <div class="input-group"
+             moment-picker="event_form.start"
+             format="YYYY-MM-DDTHH:mm">
+          
+            <input class="form-control"
+                   placeholder="Select a time"
+                   ng-model="event_form.start"
+                   id="startDateModel"
+                   >
+        </div>
+          </div>
+          <div class="form-group">
+            <label for="end-date" class="col-form-label">End:</label>
+            <div class="input-group"
+             moment-picker="event_form.end"
+             format="YYYY-MM-DDTHH:mm">
+          
+            <input class="form-control"
+                   placeholder="Select a time"
+                   ng-model="event_form.end"
+                   id="endDateModel"
+                   >
+        </div>
+          </div>
+          
+      <div class="form-group">
+            <label for="colorEvent" class="col-form-label">Color:</label>
+            <div color-picker ng-model="event_form.color"></div>
+          </div>
+          
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-if="!eventClicked">Close</button>
+        <button type="button" class="btn btn-danger" ng-if="eventClicked" ng-click="deleteEvent(idEvent)">Delete</button>
+        <button type="button" class="btn btn-success" ng-if="!eventClicked" ng-click="newEvent(event_form)">Create event</button>
+         <button type="button" class="btn btn-success" ng-click="updateEvent(event_form)" ng-if="eventClicked">Update</button>
+      </div>
+      <div id= "succesEvent" class="alert alert-success"  ng-if="showSucces" ng-bind="messageEvent"></div>
+      <div id= "errorEvent" class="alert alert-danger"  ng-if="showError" ng-bind="messageEvent"></div>
+    </div>
+  </div>
+</div>
+
+
+
+</div>
