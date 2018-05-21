@@ -30,7 +30,7 @@ function notifyMe(message) {
 
 
 
-var socket = io.connect("http://localhost:3001");
+var socket = io.connect("https://calendars14.herokuapp.com/:3000");
 socket.on('Calendar',function(data){
   if(data.name == CALENDAR_NAME){
       if(data.action == 'EVENT_CREATE')notifyMe("New event has added");
