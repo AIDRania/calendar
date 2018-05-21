@@ -39,6 +39,7 @@ socket.on('Calendar',function(data){
       if(data.action == 'EVENT_CREATE')notifyMe("New event has added");
       if(data.action == 'EVENT_UPDATE')notifyMe("Event has updated");
       if(data.action == 'EVENT_DELETE')notifyMe("Event has deleted");
+      console.log("HERE IO");
       $("#calendar").fullCalendar('refetchEvents');
     }
   if(data.action == 'CALENDAR_CREATE')notifyMe("The calendar "+data.name+" has created");
