@@ -6,9 +6,11 @@ var socket = require('socket.io');
 var  mongoose =require("mongoose");
 var app = express();
 
-var localhost = false;
 
-if(localhost)
+var port = 3001 || process.env.PORT;
+
+console.log(port);
+if(port == 3001)
 	mongoose.connect('mongodb://localhost:27017/calendar', { autoIndex: true });
 else
 	mongoose.connect('mongodb://raid:Aidrania1994@ds111390.mlab.com:11390/calendar', { autoIndex: true });
@@ -30,12 +32,10 @@ app.use(session({
 
 var server;
 
-if(localhost)
-	server =  app.listen(3001, () => console.log('app listening on port 3001'))
-else
-	server = app.listen(process.env.PORT, function () {
-	  console.log('Your app is listening on port ' + server.address().port);
-	});
+
+server = app.listen(3001 || process.env.PORT, function () {
+  console.log('Your app is listening on port ' + server.address().port);
+});
 
 var io = socket(server);
 

@@ -160,7 +160,7 @@ function showCalendar(name,isConnected){
        $scope.idEvent = calEvent._id;
        $scope.event_form.title =calEvent.title;
        $scope.event_form.author =calEvent.author;
-       $scope.event_form.color = event.color;
+       $scope.event_form.color = calEvent.color;
        $scope.event_form.description = calEvent.description;
        $scope.event_form.start = moment(calEvent.start._i).format('YYYY-MM-DDTHH:mm'); 
        $scope.event_form.end = moment(calEvent.end._i).format('YYYY-MM-DDTHH:mm');
