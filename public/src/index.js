@@ -27,15 +27,13 @@ function notifyMe(message) {
   // Finally, if the user has denied notifications and you 
   // want to be respectful there is no need to bother them any more.
 }
-var localhost = false;
-
-console.log(location.origin.replace(/^http/, 'ws'));
+var localhost = true;
 
 var socket;
 if(localhost)
-  socket = io.connect("http://localhost:3001");
+  socket = io.connect();
 else
-  socket = io.connect("https://calendars14.herokuapp.com");
+  socket = io.connect();
 socket.on('Calendar',function(data){
   if(data.name == CALENDAR_NAME){
       if(data.action == 'EVENT_CREATE')notifyMe("New event has added");

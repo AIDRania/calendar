@@ -10,7 +10,7 @@ app.service("pathService", function($rootScope,$cookieStore) {
         setPath: function(p){
             this.path = [];
             var split = p.split("/");
-            for(let i=1;i<split.length;i++)
+            for(var i=1;i<split.length;i++)
                 this.path.push(split[i]);
         }
     }
