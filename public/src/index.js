@@ -27,7 +27,7 @@ function notifyMe(message) {
   // Finally, if the user has denied notifications and you 
   // want to be respectful there is no need to bother them any more.
 }
-var localhost = true;
+var localhost = false;
 
 var socket;
 if(localhost)

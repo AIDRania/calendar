@@ -6,7 +6,7 @@ var socket = require('socket.io');
 var  mongoose =require("mongoose");
 var app = express();
 
-var localhost = true;
+var localhost = false;
 
 if(localhost)
 	mongoose.connect('mongodb://localhost:27017/calendar', { autoIndex: true });
