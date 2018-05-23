@@ -26,7 +26,7 @@ app.service("userService", function($rootScope,$cookieStore) {
         },
         haveRight: function(right){
             var rights = $cookieStore.get('rights');
-            return rights?rights.includes(right):false;
+            return rights?rights.indexOf(right)>-1:false;
         },
         getRights: function(){
             var rights = $cookieStore.get('rights');
