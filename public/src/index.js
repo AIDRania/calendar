@@ -39,7 +39,6 @@ socket.on('Calendar',function(data){
       if(data.action == 'EVENT_CREATE')notifyMe("New event has added");
       if(data.action == 'EVENT_UPDATE')notifyMe("Event has updated");
       if(data.action == 'EVENT_DELETE')notifyMe("Event has deleted");
-      console.log("HERE IO");
       $("#calendar").fullCalendar('refetchEvents');
     }
   if(data.action == 'CALENDAR_CREATE')notifyMe("The calendar "+data.name+" has created");
@@ -75,7 +74,11 @@ function showCalendar(name,isConnected){
      selectable: isConnected,
      selectHelper: isConnected,
      editable: isConnected,
-    
+     nowIndicator: true,
+     ignoreTimezone: true,
+     timezone: 'local',
+     timeFormat: 'HH:mm',
+     slotLabelFormat:"HH:mm",
      events: function(start, end, timezone, callback){
 
         const startDate = moment.utc(start).format('YYYY-MM-DDTHH:mm');
@@ -88,6 +91,7 @@ function showCalendar(name,isConnected){
           if(res.exists){
               $scope.showCalendar = true;
               $scope.$apply();
+              console.log(res.data.events[res.data.events.length -1 ]);
               callback(res.data.events);
           }else{
               $('#calendar').fullCalendar('destroy');
@@ -132,8 +136,8 @@ function showCalendar(name,isConnected){
         body.data.description = event.description;
         body.data.author = event.author;
         body.data.color = event.color;
-        body.data.start = moment.utc(event.start).format('YYYY-MM-DDTHH:mm');
-        body.data.end = moment.utc(event.end).format('YYYY-MM-DDTHH:mm');
+        body.data.start = event.start.format();
+        body.data.end = event.end.format();
         updateEvent(body,function(res){
             if(!res.action)
               revertFunc();    
@@ -148,8 +152,9 @@ function showCalendar(name,isConnected){
        $scope.event_form.description ="";
        $scope.showSucces = false;
        $scope.showError = false;
-       $scope.event_form.start = moment.utc(start).format('YYYY-MM-DDTHH:mm'); 
-       $scope.event_form.end = moment.utc(end).format('YYYY-MM-DDTHH:mm');
+       $scope.event_form.start = start.format(); 
+       $scope.event_form.end = end.format();
+       //console.log(start.format());
        $scope.$apply();
        $('#eventModal').modal('show');
      },
@@ -162,10 +167,10 @@ function showCalendar(name,isConnected){
        $scope.event_form.author =calEvent.author;
        $scope.event_form.color = calEvent.color;
        $scope.event_form.description = calEvent.description;
-       console.log(calEvent.start._i);
-       console.log(calEvent.end._i);
-       $scope.event_form.start = moment.utc(calEvent.start._i).format('YYYY-MM-DDTHH:mm'); 
-       $scope.event_form.end = moment.utc(calEvent.end._i).format('YYYY-MM-DDTHH:mm');
+       //console.log(calEvent.start._i);
+       //console.log(calEvent.end._i);
+       $scope.event_form.start = calEvent.start.format(); 
+       $scope.event_form.end = calEvent.end.format();
        $scope.showSucces = false;
        $scope.showError = false;
        $scope.$apply();

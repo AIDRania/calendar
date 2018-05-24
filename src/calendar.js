@@ -38,8 +38,8 @@ events: [{
 	description: {type:String},
 	author: {type:String},
 	color: {type:String},
-	start: {type:Date},
-	end: {type:Date}
+	start: {type:Date,timezone:'locale'},
+	end: {type:Date,timezone:'locale'}
 }]
 });
 
@@ -112,11 +112,14 @@ Calendar.prototype.delete = function(nameCalendar,callback){
 
 Calendar.prototype.addEvent = function(nameCalendar,dataEvent,callback){
 	
+	
+	console.log(dataEvent);
 	var response = {creation: false, message:''};
 	
 	// validate start and end date before add
 	var startDate = moment(dataEvent.start);
 	var endDate = moment(dataEvent.end);
+	console.log(startDate)
 	if(!startDate.isValid())
 		response.message = "Start date is not valide";
 	else if(!endDate.isValid())
@@ -328,7 +331,7 @@ Calendar.prototype.getCalendar = function(nameCalendar,start,end,callback){
 				if(!error){
 
 					if(calendarFinded){
-
+						console.log(calendarFinded.events);
 						response.exists = true;
 						response.message = 'here the data of the calendar';
 						//filter array of events with date range
@@ -348,6 +351,39 @@ Calendar.prototype.getCalendar = function(nameCalendar,start,end,callback){
 	}
 	callback(response);
 }
+
+
+
+Calendar.prototype.getEventsInXMin = function(min,callback){
+	
+	var response = {exists: false, message:'',data: null};
+	// validate start and end date before add
+	const startDate = moment().milliseconds(0).add(min, 'minutes');
+	console.log(startDate);
+	CalendarModel.find({events: {$elemMatch: {
+			start: startDate}}
+			},function(error,calendarsFinded){
+				
+				if(!error){
+			
+					if(calendarsFinded){
+						
+						response.exists = true;
+						response.message = 'here the events';
+						response.data = calendarsFinded;
+					
+					}
+					else
+						response.message = 'There is no events';
+								
+				}else
+					for(var e in  error.errors)response.message += error.errors[e].message + ', ';
+				callback(response);	
+			}
+		);
+
+}
+
 
 
 

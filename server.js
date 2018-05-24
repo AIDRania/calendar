@@ -341,19 +341,6 @@ app.post('/updateEvent', (req,res,next) => {
 	});
 });
 
-
-app.get('/getCalendarsNames', (req,res,next) => {
-
-	/*if(!req.session.user)
-		return res.send({login: false, message: "You need to logIn"});
-	console.log(req.params.name);
-	var calendar = new Calendar();
-	var nameCalendar = req.params.name;
-	calendar.getCalendar(nameCalendar,function(response){
-		res.send(response);
-		next();
-	});*/
-});
 app.get('/getCalendar', (req,res,next) => {
 
 	/*if(!req.session.user)
@@ -382,10 +369,15 @@ app.get('/getCalendarInfos', (req,res,next) => {
 	});
 });
 
+var c = new Calendar();
+var min = 4;
+//setInterval(function() {
+//	c.getEventsInXMin(min,function(response){
+		//console.log(response);
+//	});
+//}, 1000);
+
 
 io.on('connection', function(socket){
-	socket.on('update',function(data){
-		console.log(data);
-		
-	});
+	//console.log(socket.id);
 });

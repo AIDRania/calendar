@@ -157,12 +157,14 @@ app.controller('calendarController',['$scope','userService',function($scope,user
     showCalendar(name,userService.isConnected());
 
    };
-
+   $scope.getCalendar("nana");
    $scope.newEvent = function(event_form){
         var body = new Object();
         body.name_calendar = CALENDAR_NAME;
         body.data = event_form;
 
+        console.log(body.data.start);
+        console.log(body.data.end);
         addEvent(body,function(res){
             if(res.creation){
                 $scope.showSucces = true;
@@ -183,7 +185,7 @@ app.controller('calendarController',['$scope','userService',function($scope,user
         body.name_calendar = CALENDAR_NAME;
         body.id_event = $scope.idEvent;
         body.data = event_form;
-        
+        console.log(body.data.start);
         updateEvent(body,function(res){
             if(res.action){
                 $scope.showSucces = true;
