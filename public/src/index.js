@@ -117,8 +117,8 @@ function showCalendar(name,isConnected){
         body.data.color = event.color;
         body.data.description = event.description;
         body.data.author = event.author;
-        body.data.start = moment.utc(event.start).format('YYYY-MM-DDTHH:mm');
-        body.data.end = moment.utc(event.end).format('YYYY-MM-DDTHH:mm');
+        body.data.start = event.start.format();
+        body.data.end = event.end.format();
         updateEvent(body,function(res){
             if(!res.action)
               revertFunc();    
