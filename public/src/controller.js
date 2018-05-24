@@ -167,6 +167,7 @@ app.controller('calendarController',['$scope','userService',function($scope,user
     CALENDAR_NAME = name;
     showCalendar(name,userService.isConnected());
        };
+   CALENDAR_NAME = "nana";
    $scope.getCalendar("nana"); // get default calendar at first
 
    $scope.newEvent = function(event_form){
