@@ -50,14 +50,15 @@ app.post('/createuser', (req,res,next) => {
 	var type = "";
 	var data = req.body;
 	console.log(data.photoProfile);
-	if(data.photoProfile.includes('data:image/jpg') || data.photoProfile.includes('data:image/jpeg'))
+	if( data.photoProfile == "images/menProfile.jpg" || data.photoProfile == "images/womenProfile.jpg")
+		data.photoPath = data.photoProfile;
+	else if(data.photoProfile.includes('data:image/jpg') || data.photoProfile.includes('data:image/jpeg'))
 		data.photoPath = "uploads/"+data.email+".jpg";
 	else if(data.photoProfile.includes('data:image/png'))
 		data.photoPath = "uploads/"+data.email+".png";
 	else return res.send({creation: false, message: "You need to upload jpg, jpeg or png file"});
 	
-	if( data.photoProfile == "images/menProfile.jpg" || data.photoProfile == "images/womenProfile.jpg")
-		data.photoPath = data.photoProfile;
+	
 	 
 	console.log(data.photoPath); 
 	var user = new User(data);
