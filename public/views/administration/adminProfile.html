@@ -6,9 +6,9 @@
         <div class="col-md-2">
           <h4> Email: </h4>
         </div>
-      <div class="col-md-10">
-        <input class=" form-control" type="shearc" placeholder="Search" aria-label="Search" ng-model='email' >
-      </div>
+        <div class="col-md-10">
+          <input class="form-control" type="shearc" placeholder="Search" aria-label="Search" ng-model='email' >
+        </div>
     </div>
     </div>
 
@@ -23,8 +23,9 @@
 </div>
 
 
+<div  class="column col-md-8"  >
 
-<div  class="column col-md-offset-1 col-md-6 shadow" ng-if="showProfil" >
+<div  class="column col-md-offset-2 col-md-8 shadow" ng-if="showProfil" >
 
   <div class="row">
     <div class="col-md-offset-4 col-md-4">
@@ -72,10 +73,13 @@
     <option ng-repeat="right in allRights" >{{right}}</option>
   </select>
   </div>
-  <button type="button" class="btn btn-success col-md-1" ng-click="assignRight(userData.email,rightToAdd)">Add</button>
+  <button type="button" class="btn btn-success col-md-2" ng-click="assignRight(userData.email,rightToAdd)">Add</button>
 </div>
 
 <div id= "errorGetProfile" class="alert alert-danger"  ng-show="showError" ng-bind="errorMessageGetProfile"></div>
 </div>
+
+</div>
+
 
 </div>

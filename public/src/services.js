@@ -18,6 +18,21 @@ app.service("pathService", function($rootScope,$cookieStore) {
 });
 
 
+app.service("calendarService", function($rootScope,$cookieStore) {
+    return { 
+        name: getDefaultName(),
+        getName: function(){
+            return this.name;
+        },
+        setName: function(n){
+            this.path = n;
+        }
+    }
+
+});
+
+
+
 
 app.service("userService", function($rootScope,$cookieStore) {
     return { 

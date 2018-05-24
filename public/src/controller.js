@@ -9,12 +9,16 @@ app.run(function($rootScope, $location, userService,pathService) {
                 userService.logOut();
             }
 
-            if (next.$$route && next.$$route.authorizedLogin && !userService.isConnected())
+            if (next.$$route && next.$$route.authorizedLogin &&  !userService.isConnected()){
+                console.log(1);
                 $location.path("login");
-            else if(next.$$route && !next.$$route.authorizedLogin && userService.isConnected())
+            }
+            if(next.$$route && next.$$route.authorizedLogout &&  userService.isConnected()){
+                console.log(2);
                 $location.path("home");
-            else if(next.$$route && next.$$route.authorizedLogin 
-                && next.$$route.authorizedAdmin && !userService.haveRight('ADMINISTRATION')){
+            }
+            if(next.$$route && next.$$route.authorizedAdmin && !userService.haveRight('ADMINISTRATION')){
+                console.log(3);
                 $location.path("home"); 
                 }
             $rootScope.$apply();
@@ -28,46 +32,54 @@ app.config(['$routeProvider',function($routeProvider) {
         templateUrl : "views/calendar.html",
         controller  : "calendarController",
         authorizedLogin: false,
+        authorizedLogout: false,
         authorizedAdmin: false
     }) 
     .when("/login", {
         templateUrl : "views/login.html",
         controller  : "loginController",
         authorizedLogin: false,
+        authorizedLogout: true,
         authorizedAdmin: false
     })
     .when("/profile", {
         templateUrl : "views/profile.html",
         controller  : "profileConroller",
         authorizedLogin: true,
+        authorizedLogout: false,
         authorizedAdmin: false
         })
     .when("/administration/profile", {
         templateUrl : "views/administration/adminProfile.html",
         controller  : "adminProfileConroller",
-        authorizedLogin: true,
+        authorizedLogin: false,
+        authorizedLogout: false,
         authorizedAdmin: true
     })
     .when("/administration/calendar", {
         templateUrl : "views/administration/adminCalendar.html",
         controller  : "adminCalendarConroller",
-        authorizedLogin: true,
+         authorizedLogin: false,
+        authorizedLogout: false,
         authorizedAdmin: true
     })
     .when("/registration", {
         templateUrl : "views/registration.html",
         controller  : "registrationConroller",
-        authorizedLogin: false,
+         authorizedLogin: false,
+        authorizedLogout: true,
         authorizedAdmin: false
     })
     .when("/about", {
         templateUrl : "views/about.html",
         authorizedLogin: false,
+        authorizedLogout: false,
         authorizedAdmin: false
     })
     .when("/contact", {
         templateUrl : "views/contact.html",
         authorizedLogin: false,
+        authorizedLogout: false,
         authorizedAdmin: false
     })
 
@@ -155,7 +167,7 @@ app.controller('calendarController',['$scope','userService',function($scope,user
     CALENDAR_NAME = name;
     showCalendar(name,userService.isConnected());
        };
-   $scope.getCalendar("DEFAULT"); // get default calendar at first
+   $scope.getCalendar("nana"); // get default calendar at first
 
    $scope.newEvent = function(event_form){
         var body = new Object();
