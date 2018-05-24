@@ -162,7 +162,8 @@ app.controller('calendarController',['$scope','userService',function($scope,user
         var body = new Object();
         body.name_calendar = CALENDAR_NAME;
         body.data = event_form;
-
+        body.data.start = moment(body.data.start).utc().format();
+        body.data.end = moment(body.data.end).utc().format();
         console.log(body.data.start);
         console.log(body.data.end);
         addEvent(body,function(res){
@@ -185,7 +186,7 @@ app.controller('calendarController',['$scope','userService',function($scope,user
         body.name_calendar = CALENDAR_NAME;
         body.id_event = $scope.idEvent;
         body.data = event_form;
-        console.log(body.data.start);
+        
         updateEvent(body,function(res){
             if(res.action){
                 $scope.showSucces = true;
