@@ -6,6 +6,8 @@ var socket = require('socket.io');
 var  mongoose =require("mongoose");
 var app = express();
 
+const DEFAULT_CALENDAR = "nana";
+
 var localhost = false;
 
 if(localhost)
@@ -251,6 +253,9 @@ app.post('/deleteCalendar', (req,res,next) => {
 	if(!have)return res.send({action:false , message: "You dont have the right"});	
 		var calendar = new Calendar();
 		var nameCalendar = req.body.name_calendar;
+		if(nameCalendar == DEFAULT_CALENDAR)
+			return res.send({action:false , message: "You can't delete a default calendar"});
+
 		calendar.delete(nameCalendar,function(response){
 			if(response.action)
 				io.sockets.emit('Calendar',{action: 'CALENDAR_DELETE',name: nameCalendar});
@@ -343,10 +348,11 @@ app.post('/updateEvent', (req,res,next) => {
 
 app.get('/getCalendar', (req,res,next) => {
 
-	/*if(!req.session.user)
-		return res.send({login: false, message: "You need to logIn"});*/
 	var calendar = new Calendar();
-	var nameCalendar = req.query.name;
+	var nameCalendar;
+	if(req.query.name == "DEFAULT")
+		nameCalendar = DEFAULT_CALENDAR;
+	else nameCalendar = req.query.name;
 	var startCalendar = req.query.start;
 	var endCalendar = req.query.end;
 	calendar.getCalendar(nameCalendar,startCalendar,endCalendar,function(response){

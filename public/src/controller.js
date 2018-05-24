@@ -153,11 +153,10 @@ app.controller('calendarController',['$scope','userService',function($scope,user
 
    $scope.getCalendar = function(name){
     CALENDAR_NAME = name;
-    
     showCalendar(name,userService.isConnected());
+       };
+   $scope.getCalendar("DEFAULT"); // get default calendar at first
 
-   };
-   $scope.getCalendar("nana");
    $scope.newEvent = function(event_form){
         var body = new Object();
         body.name_calendar = CALENDAR_NAME;
