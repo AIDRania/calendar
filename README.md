@@ -2,12 +2,12 @@ Thank you for using Calendar!
 
 Features:
 >  	base64-img  
-	body-parser
-	express
-	express-session
-	moment
-	mongoose
-	socket.io
+>  	body-parser
+>  	express
+>  	express-session
+>  	moment
+>  	mongoose
+>  	socket.io
 
 instalation:
 	nmp install 
