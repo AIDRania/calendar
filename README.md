@@ -1,4 +1,12 @@
+## Calendar
+
 Thank you for using Calendar!
+
+this application aims to facilitate the organization of your meals in several calendars and control your schedule by month or by week or by day. 
+
+environnement:
+- NodeJS : https://nodejs.org/en/download/
+- npm (with nodeJS by default)
 
 Features:
 - base64-img  
@@ -10,10 +18,10 @@ Features:
 - socket.io
 
 instalation:
-	nmp install 
+- nmp install 
 
 execution: 
-	node server.js 
+- node server.js 
 
 note: 
 	to éxécute the server in localhost you need to change variable localhost in server.js to true
