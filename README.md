@@ -22,6 +22,8 @@ note:
 
 go in the web browser and tape localhost:3001 then start your navigation 
 
+You can see the calendars without create an account
+If you sign up then you can create or update or delete the events if you are the owner or administrator
 
 sources: 
 	https://getbootstrap.com/
@@ -29,4 +31,4 @@ sources:
 
 
 
-Copyright © 2018-2019 by AID rania & .
+Copyright © 2018-2019 by AID rania & Sarahaouimeur Leila 
