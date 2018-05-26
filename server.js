@@ -1,3 +1,5 @@
+
+/** Importation of all library and files **/
 var express = require('express');
 var base64Img = require('base64-img');
 var bodyParser = require('body-parser');
@@ -6,21 +8,23 @@ var socket = require('socket.io');
 var  mongoose =require("mongoose");
 var app = express();
 
-var localhost = false;
-var DEFAULT_CALENDAR="home";
+var localhost = false; // true if you want to execute in localhost with port: 3001 
+var DEFAULT_CALENDAR="home"; // the default calendar name
 
 if(localhost)
 	mongoose.connect('mongodb://localhost:27017/calendar', { autoIndex: true });
 else
 	mongoose.connect('mongodb://raid:Aidrania1994@ds111390.mlab.com:11390/calendar', { autoIndex: true });
 
+
 var User = require('./src/user.js');
 var Calendar = require('./src/calendar.js');
 
 
-app.use(express.static('public'));
-app.use('/uploads',express.static('uploads'));
-app.use(bodyParser.json({limit: '20mb'}));
+app.use(express.static('public'));//allow the public directory
+app.use('/uploads',express.static('uploads')); //allow the uploads directory
+app.use(bodyParser.json({limit: '20mb'})); //change the size of http body request
+//use the session wth secret number
 app.use(session({
 	secret: '23144',
 	resave: false,
@@ -38,6 +42,8 @@ else
 	  console.log('Your app is listening on port ' + server.address().port);
 	});
 
+
+//initialize the socket 
 var io = socket(server);
 
 
