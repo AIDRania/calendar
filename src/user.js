@@ -1,5 +1,5 @@
 var  mongoose =require("mongoose")
-
+var  moment =require("moment");
 var userSchema = new mongoose.Schema({
 
 email:{type:String,
@@ -7,8 +7,8 @@ email:{type:String,
 	validate: [{
 		// test syntax of email
 		validator: function(value){
-			if(value == "test") return false;
-			return true;
+			var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+   			return emailRegex.test(value); // Assuming email has a text attribute
 		},
 		message: '{VALUE} is not a valid e-mail adress'
 	},
@@ -30,31 +30,44 @@ email:{type:String,
 	,
 	required: [true, 'User email adress required']
 },
-photoPath:{type:String},
-last_name:{type:String},
-first_name:{type:String},
-gender:{type:String},
+photoPath:{type:String,
+		required: [true, 'User photo is required']},
+last_name:{type:String,
+	required: [true, 'User last_name is required']},
+first_name:{type:String,
+	required: [true, 'User first_name is required']},
+gender:{type: String,
+		enum: ['male','female']},
+
 country:{type:String},
 birthday_date:{
 	type:Date,
-	validator: function(value){
-			return true;
-		},
-	message: '{VALUE} is not a valid date '
+	validate:{
+		validator: function(value){
+			
+				if(value>=moment("1930-01-01") && value<=moment("2008-01-01"))
+					return true;
+				return false;
+			},
+		message: '{VALUE} is not a valid date'
+	},
+	required: [true, 'Birth Day date is required']
 },
 password:{
 	type:String,
-
 	validate:{
-	validator:function(value){
-	if(value.lenght <3)
-	return false;
-	return true;	
-
+		validator:function(value){
+			//console.log(value.length);
+			if( value.lenght < 8 ){
+			//	console.log(value.length < 8);
+				return false;
+			}
+			return true;	
+		},
+		message:'the password should be have more then height characters'
 	},
-	message:'the password should be have more then height characters'
+	required: [true, 'User password is required']
 },
-	required: [true, 'User password is requited']},
 privileges:[{
 			type: String,
 			enum: ['CREATION','MODIFICATION','DELETION','ADMINISTRATION'],

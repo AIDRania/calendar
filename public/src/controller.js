@@ -10,15 +10,15 @@ app.run(function($rootScope, $location, userService,pathService) {
             }
 
             if (next.$$route && next.$$route.authorizedLogin &&  !userService.isConnected()){
-                console.log(1);
+                
                 $location.path("login");
             }
             if(next.$$route && next.$$route.authorizedLogout &&  userService.isConnected()){
-                console.log(2);
+                
                 $location.path("home");
             }
             if(next.$$route && next.$$route.authorizedAdmin && !userService.haveRight('ADMINISTRATION')){
-                console.log(3);
+             
                 $location.path("home"); 
                 }
             $rootScope.$apply();
@@ -166,9 +166,11 @@ app.controller('calendarController',['$scope','userService',function($scope,user
    $scope.getCalendar = function(name){
     CALENDAR_NAME = name;
     showCalendar(name,userService.isConnected());
-       };
-   CALENDAR_NAME = "nana";
-   $scope.getCalendar("nana"); // get default calendar at first
+       
+    };
+
+
+   $scope.getCalendar("home"); // get default calendar at first
 
    $scope.newEvent = function(event_form){
         var body = new Object();
@@ -176,8 +178,7 @@ app.controller('calendarController',['$scope','userService',function($scope,user
         body.data = event_form;
         body.data.start = moment(body.data.start).format();
         body.data.end = moment(body.data.end).format();
-        console.log(body.data.start);
-        console.log(body.data.end);
+       
         addEvent(body,function(res){
             if(res.creation){
                 $scope.showSucces = true;
@@ -288,9 +289,10 @@ app.controller('loginController',['$scope','$location','$cookieStore','userServi
 app.controller('registrationConroller',['$scope','$location',function($scope,$location){
 
     $scope.registration_form = new Object();
-    $scope.registration_form.photoProfile = "images/menProfile.jpg";
+    $scope.registration_form.photoProfile = "images/womenProfile.jpg";
+    $scope.registration_form.gender = "female";
     $scope.photoSelected = false;
-    $scope.updateGebnder = function(gender){
+    $scope.updateGender = function(gender){
         if(gender == "male" && !$scope.photoSelected)
             $scope.registration_form.photoProfile = "images/menProfile.jpg";
         if(gender == "female" && !$scope.photoSelected)
@@ -299,7 +301,7 @@ app.controller('registrationConroller',['$scope','$location',function($scope,$lo
     }
 
     $scope.processFiles = function(files){
-        //if(file[0])
+        
          if(files[0].file.type.indexOf("image") == -1){
             alert("You need to select an image file");
             return;
@@ -467,7 +469,7 @@ app.controller('adminCalendarConroller',['$scope','$location',
                 $scope.showSuccesCreate = false;
                 $scope.showSuccesDelete = false;
                 $scope.errorMessage = res.message;
-                $scope.showCalendarInfos = true;
+                $scope.showCalendarInfos = false;
             }
             
             $scope.$apply();

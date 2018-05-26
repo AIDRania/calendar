@@ -6,7 +6,8 @@ var socket = require('socket.io');
 var  mongoose =require("mongoose");
 var app = express();
 
-var localhost = false;
+var localhost = true;
+var DEFAULT_CALENDAR="home";
 
 if(localhost)
 	mongoose.connect('mongodb://localhost:27017/calendar', { autoIndex: true });
@@ -15,7 +16,7 @@ else
 
 var User = require('./src/user.js');
 var Calendar = require('./src/calendar.js');
-var sendMail = require('./src/mail.js');
+
 
 app.use(express.static('public'));
 app.use('/uploads',express.static('uploads'));
@@ -49,7 +50,6 @@ app.post('/createuser', (req,res,next) => {
 		return res.send({login: true, message: "You already logIn"});
 	var type = "";
 	var data = req.body;
-	console.log(data.photoProfile);
 	if( data.photoProfile == "images/menProfile.jpg" || data.photoProfile == "images/womenProfile.jpg")
 		data.photoPath = data.photoProfile;
 	else if(data.photoProfile.includes('data:image/jpg') || data.photoProfile.includes('data:image/jpeg'))
@@ -59,8 +59,7 @@ app.post('/createuser', (req,res,next) => {
 	else return res.send({creation: false, message: "You need to upload jpg, jpeg or png file"});
 	
 	
-	 
-	console.log(data.photoPath); 
+	
 	var user = new User(data);
 	user.create(function(response){
 		
@@ -97,24 +96,8 @@ app.post('/login', (req,res,next) => {
 	user.login(function(response){
 		if(response.isExists){
 			req.session.user = response.user;
-			console.log(req.session.user);
 		}
 		res.send(response);
-	});
-});
-
-app.get('/remember_password', (req,res,next) => {
-	if(req.session.user)
-		return res.send({login: true, message: "You aready logIn"});
-	
-	var user = new User({email: req.query.email});
-	user.getPassword(function(response){
-		if(response.isExists){
-			sendMail(response.user.emai,response.user.password,function(resp){
-				res.send(resp);
-			});
-		}else
-			return res.send({sent: false, message: response.message});
 	});
 });
 
@@ -175,7 +158,6 @@ app.post('/assignRights', (req,res,next) => {
 			return res.send({assign: false, message: "You need to give the email"});
 		if(!req.body.rights && Array.isArray(req.body.rights))
 			return res.send({assign: false, message: "You need to give the rights"});
-		console.log(req.body.rights);
 		var user = new User(req.body);
 
 		user.assignRights(function(response){
@@ -231,7 +213,6 @@ app.post('/createCalendar', (req,res,next) => {
 		var calendar = new Calendar();
 		var data = req.body;
 		data.owner = req.session.user.email;
-		console.log(data);
 		calendar.create(data,function(response){
 			if(response.creation)
 				io.sockets.emit('Calendar',{action: 'CALENDAR_CREATE',name: data.name});
@@ -252,6 +233,7 @@ app.post('/deleteCalendar', (req,res,next) => {
 	if(!have)return res.send({action:false , message: "You dont have the right"});	
 		var calendar = new Calendar();
 		var nameCalendar = req.body.name_calendar;
+		if(nameCalendar == DEFAULT_CALENDAR) return res.send({action:false , message: "You can't delete a default calendar"});
 		calendar.delete(nameCalendar,function(response){
 			if(response.action)
 				io.sockets.emit('Calendar',{action: 'CALENDAR_DELETE',name: nameCalendar});
@@ -311,6 +293,7 @@ app.post('/deleteEvent', (req,res,next) => {
 			next();
 		});
 	});
+
 	});
 });
 
@@ -370,15 +353,22 @@ app.get('/getCalendarInfos', (req,res,next) => {
 	});
 });
 
+
 var c = new Calendar();
-var min = 4;
-//setInterval(function() {
-//	c.getEventsInXMin(min,function(response){
-		//console.log(response);
-//	});
-//}, 1000);
+var inXmin = 15;
+setInterval(function() {
+	c.getEventsInXMin(inXmin,function(response){
+		for(var d in response.data){
+			//console.log(response.data[d].name);
+			//console.log(response.data[d].events[0].title);
+			//console.log(response.data[d].events[0].start);
+			//console.log(response.data[d].events[0].end);
+			io.sockets.emit('Calendar',{action: 'EVENT_REMEMBER',
+										name: response.data[d].events[0].title,
+										min: inXmin});
+		}
+	});
+}, 1000);
 
 
-io.on('connection', function(socket){
-	//console.log(socket.id);
-});
+

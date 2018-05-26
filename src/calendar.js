@@ -34,7 +34,7 @@ name:{type:String,
 owner:{type:String},
 events: [{
 
-	title: {type:String},
+	title: {type:String,required: [true, 'event name required']},
 	description: {type:String},
 	author: {type:String},
 	color: {type:String},
@@ -112,14 +112,12 @@ Calendar.prototype.delete = function(nameCalendar,callback){
 
 Calendar.prototype.addEvent = function(nameCalendar,dataEvent,callback){
 	
-	
-	console.log(dataEvent);
+
 	var response = {creation: false, message:''};
 	
 	// validate start and end date before add
 	var startDate = moment(dataEvent.start);
 	var endDate = moment(dataEvent.end);
-	console.log(startDate)
 	if(!startDate.isValid())
 		response.message = "Start date is not valide";
 	else if(!endDate.isValid())
@@ -149,7 +147,6 @@ Calendar.prototype.addEvent = function(nameCalendar,dataEvent,callback){
 						 ]}
 				}
 		},function(error,find){
-			console.log(find);
 				if(!find){
 					CalendarModel.findOneAndUpdate(
 							{name: nameCalendar},
@@ -225,9 +222,7 @@ Calendar.prototype.updateEvent = function(nameCalendar,id_event,newData,callback
 							 ]}]
 				}}
 		},function(error,find){
-			console.log(find);
-			if(!find){		
-			console.log(newData);
+			if(!find){	
 			CalendarModel.findOneAndUpdate(
 					{
 						name: nameCalendar,
@@ -242,7 +237,6 @@ Calendar.prototype.updateEvent = function(nameCalendar,id_event,newData,callback
 						}},
 					{runValidators: true},
 					function(error,eventFinded){
-						console.log(eventFinded);
 						if(!error){	
 							if(eventFinded){
 								response.action = true;
@@ -276,7 +270,6 @@ Calendar.prototype.updateEvent = function(nameCalendar,id_event,newData,callback
 Calendar.prototype.deleteEvent = function(nameCalendar,id_event,author,callback){
 	
 	var response = {action: false, message:''};
-	console.log(nameCalendar, id_event);
 	CalendarModel.findOneAndUpdate(
 			{
 				name: nameCalendar,
@@ -285,7 +278,6 @@ Calendar.prototype.deleteEvent = function(nameCalendar,id_event,author,callback)
 			{$pull: {events: {_id: id_event}}},
 			{runValidators: true},
 			function(error,eventFinded){
-				console.log("DELETE " + id_event);
 				if(!error){
 					
 					if(eventFinded){
@@ -331,7 +323,6 @@ Calendar.prototype.getCalendar = function(nameCalendar,start,end,callback){
 				if(!error){
 
 					if(calendarFinded){
-						console.log(calendarFinded.events);
 						response.exists = true;
 						response.message = 'here the data of the calendar';
 						//filter array of events with date range
@@ -358,15 +349,15 @@ Calendar.prototype.getEventsInXMin = function(min,callback){
 	
 	var response = {exists: false, message:'',data: null};
 	// validate start and end date before add
-	const startDate = moment().milliseconds(0).add(min, 'minutes');
-	console.log(startDate);
+	const startDate = moment.utc().milliseconds(0).add(min, 'minutes');
+	
 	CalendarModel.find({events: {$elemMatch: {
 			start: startDate}}
-			},function(error,calendarsFinded){
+			},{ 'events.$': 1 },function(error,calendarsFinded){
 				
 				if(!error){
 			
-					if(calendarsFinded){
+					if(calendarsFinded && calendarsFinded.length >0){
 						
 						response.exists = true;
 						response.message = 'here the events';
