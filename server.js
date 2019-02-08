@@ -14,7 +14,7 @@ var DEFAULT_CALENDAR="home"; // the default calendar name
 if(localhost)
 	mongoose.connect('mongodb://localhost:27017/calendar', { autoIndex: true });
 else
-	mongoose.connect('mongodb://raid:Aidrania1994@ds111390.mlab.com:11390/calendar', { autoIndex: true });
+	mongoose.connect('mongodb://', { autoIndex: true });
 
 
 var User = require('./src/user.js');
